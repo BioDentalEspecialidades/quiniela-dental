@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiniela Mundial 2026 | Clínica Dental</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b3d2e;
+            padding: 20px;
+            color: #fff;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #fff;
+            color: #333;
+            padding: 25px;
+            border-radius: 20px;
+        }
+        h1 {
+            color: #0b3d2e;
+            text-align: center;
+            font-size: 22px;
+        }
+        .premio {
+            background: gold;
+            color: #000;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 30px;
+            margin: 15px 0;
+            font-size: 18px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .partido {
+            background: #f0f0f0;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .partido input {
+            width: 50px;
+            text-align: center;
+        }
+        button {
+            background: #c99a2b;
+            color: #000;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 14px;
+            width: 100%;
+            border: none;
+            border-radius: 30px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        .link-box {
+            background: #e0e0e0;
+            padding: 10px;
+            border-radius: 10px;
+            word-break: break-all;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .small {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚽ Quiniela Mundial 2026 🦷</h1>
+        
+        <div class="premio">🏆 PREMIO: Blanqueamiento Dental GRATIS</div>
+
+        <label>👤 Nombre:</label>
+        <input type="text" id="nombre" placeholder="Tu nombre completo">
+
+        <label>📧 Email:</label>
+        <input type="email" id="email" placeholder="tu@email.com">
+
+        <h3 style="margin-top:20px;">Predice los marcadores:</h3>
+
+        <div id="partidos"></div>
+
+        <p style="font-size:13px; background:#e8f5e9; padding:10px; border-radius:10px;">
+            📋 <b>Puntuación:</b> 1 punto por acierto de goles de cada equipo + 3 puntos por acertar el resultado final (ganador/empate)
+        </p>
+
+        <button onclick="registrar()">✅ REGISTRARME EN LA QUINIELA</button>
+
+        <p style="margin-top:15px;"><b>🔗 Link para compartir:</b></p>
+        <div class="link-box" id="link">Cargando...</div>
+        <button onclick="copiarLink()" style="background:#1b5e3a; color:white; margin-top:5px;">📋 Copiar Link</button>
+
+        <p class="small">Clínica Dental · Mundial 2026 · Participación gratuita</p>
+    </div>
+
+    <script>
+        // PARTIDOS OFICIALES FIFA 2026
+        const partidos = [
+            "México vs Canadá",
+            "Estados Unidos vs Uruguay",
+            "Argentina vs Portugal",
+            "Brasil vs Francia",
+            "España vs Alemania",
+            "Inglaterra vs Italia"
+        ];
+
+        // Mostrar partidos
+        let html = '';
+        partidos.forEach((p, i) => {
+            html += `
+                <div class="partido">
+                    <span style="font-weight:bold;">${p}</span>
+                    <span>
+                        <input type="number" id="local${i}" placeholder="0" min="0" max="15"> - 
+                        <input type="number" id="visita${i}" placeholder="0" min="0" max="15">
+                    </span>
+                </div>`;
+        });
+        document.getElementById('partidos').innerHTML = html;
+
+        // Mostrar link
+        document.getElementById('link').innerText = window.location.href;
+
+        function registrar() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            if (!nombre) { alert('Ingresa tu nombre'); return; }
+            if (!email.includes('@')) { alert('Email inválido'); return; }
+
+            // Verificar predicciones
+            let predicciones = [];
+            for (let i = 0; i < partidos.length; i++) {
+                let l = document.getElementById('local'+i).value;
+                let v = document.getElementById('visita'+i).value;
+                if (l === '' || v === '') {
+                    alert('Completa todos los marcadores (usa 0 si es necesario)');
+                    return;
+                }
+                predicciones.push({
+                    partido: partidos[i],
+                    local: parseInt(l),
+                    visita: parseInt(v)
+                });
+            }
+
+            // Guardar
+            let datos = { nombre, email, predicciones, fecha: new Date().toISOString() };
+            let registros = JSON.parse(localStorage.getItem('quiniela2026') || '[]');
+            registros.push(datos);
+            localStorage.setItem('quiniela2026', JSON.stringify(registros));
+
+            alert('✅ ¡Registrado con éxito, ' + nombre + '!\nTe contactaremos si ganas el blanqueamiento dental.');
+        }
+
+        function copiarLink() {
+            navigator.clipboard.writeText(window.location.href)
+                .then(() => alert('📋 ¡Link copiado! Compártelo por WhatsApp a tus pacientes'))
+                .catch(() => alert('Copia manualmente: ' + window.location.href));
+        }
+    </script>
+</body>
+</html>
